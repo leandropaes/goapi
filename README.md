@@ -1,6 +1,7 @@
 # GO API
 
 Para executar a API executar o comando: `go run main.go`
+
 A API escuta a porta `3000`, para acessar utilize o endereço: `http://localhost:3000`
 
 #### O que tem?
