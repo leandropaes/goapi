@@ -1,8 +1,39 @@
 # GO API
 
-Para alterar os dados de conexão alterar o arquivo: `lib/db.go`
+Para executar a API executar o comando: `go run main.go`
+A API escuta a porta `3000`, para acessar utilize o endereço: `http://localhost:3000`
 
-#### BASE DE DADOS - MYSQL
+#### O que tem?
+
+CRUDS:
+
+- Users
+- Sellers
+
+#### Endpoint
+
+##### Home
+- [GET] /
+
+##### Users
+- [GET] /v1/users
+- [GET] /v1/users/:id
+- [POST] /v1/users
+- [PUT] /v1/users/:id
+- [DELETE] /v1/users/:id
+
+##### Sellers
+- [GET] /v1/sellers
+- [GET] /v1/sellers/:id
+- [POST] /v1/sellers
+- [PUT] /v1/sellers/:id
+- [DELETE] /v1/sellers/:id
+
+#### BANCO DE DADOS
+
+Para alterar os dados de conexão com o banco de dados altere o arquivo: `lib/db.go`
+
+##### DUMP - MYSQL
 
 ```
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
