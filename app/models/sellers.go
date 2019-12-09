@@ -4,8 +4,8 @@ import "github.com/leandropaes/goapi/lib"
 
 // Seller table users
 type Seller struct {
-	ID    int    `db:"id" json:"id"`
-	Name  string `db:"name" json:"name"`
+	ID   int    `db:"id" json:"id"`
+	Name string `db:"name" json:"name" validate:"required"`
 }
 
 // Sellers array from Seller

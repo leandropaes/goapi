@@ -5,9 +5,9 @@ import "github.com/leandropaes/goapi/lib"
 // User table users
 type User struct {
 	ID    int    `db:"id" json:"id"`
-	Name  string `db:"name" json:"name"`
-	Email string `db:"email" json:"email"`
-	Password string `db:"password" json:"-"`
+	Name  string `db:"name" json:"name" validate:"required"`
+	Email string `db:"email" json:"email" validate:"email"`
+	Password string `db:"password" json:"-" validate:"required"`
 }
 
 // Users array from User

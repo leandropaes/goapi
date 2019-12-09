@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo"
 	"github.com/leandropaes/goapi/app/models"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // SellerIndex list all sellers
@@ -50,39 +52,47 @@ func SellerShow(c echo.Context) error {
 
 // SellerCreate create seller
 func SellerCreate(c echo.Context) error {
+
 	name := c.FormValue("name")
 
 	var seller models.Seller
 	seller.Name = name
 
-	// TODO: Verificar uma mellhor forma de fazer validação dos campos
-	if name != "" {
-		if _, err := models.SellerModel.Insert(seller); err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"message": "Não foi possível adicionar o registro no banco de dados.",
-			})
-		}
-
-		return c.JSON(http.StatusOK, map[string]string{
-			"message": "Registro cadastrado com sucesso.",
+	validate := validator.New()
+	if err := validate.Struct(seller); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Por favor, verifique se preencheu todos os campos corretamente",
+			"error": strings.Split(err.Error(),"\n"),
 		})
 	}
 
-	return c.JSON(http.StatusBadRequest, map[string]string{
-		"message": "Todos os campos são obrigatórios",
+	if _, err := models.SellerModel.Insert(seller); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"message": "Não foi possível adicionar o registro no banco de dados.",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"message": "Registro cadastrado com sucesso.",
 	})
 }
 
 // SellerUpdate update seller
 func SellerUpdate(c echo.Context) error {
-	// TODO: Fazer validação dos campos
 	id, _ := strconv.Atoi(c.Param("id"))
 	name := c.FormValue("name")
 
-	// TODO: Verificar alguma forma de não ter que sempre passar todos os campos para atualizar
 	var seller = models.Seller{
-		ID:    id,
-		Name:  name,
+		ID:   id,
+		Name: name,
+	}
+
+	validate := validator.New()
+	if err := validate.Struct(seller); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Por favor, verifique se preencheu todos os campos corretamente",
+			"error": strings.Split(err.Error(),"\n"),
+		})
 	}
 
 	result := models.SellerModel.Find("id=?", id)

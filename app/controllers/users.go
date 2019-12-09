@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo"
 	"github.com/leandropaes/goapi/app/models"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // UserIndex list all users
@@ -59,33 +61,32 @@ func UserCreate(c echo.Context) error {
 	user.Email = email
 	user.Password = password
 
-	// TODO: Verificar uma mellhor forma de fazer validação dos campos
-	if name != "" && email != "" && password != "" {
-		if _, err := models.UserModel.Insert(user); err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]string{
-				"message": "Não foi possível adicionar o registro no banco de dados.",
-			})
-		}
-
-		return c.JSON(http.StatusOK, map[string]string{
-			"message": "Registro cadastrado com sucesso.",
+	validate := validator.New()
+	if err := validate.Struct(user); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Por favor, verifique se preencheu todos os campos corretamente",
+			"error": strings.Split(err.Error(),"\n"),
 		})
 	}
 
-	return c.JSON(http.StatusBadRequest, map[string]string{
-		"message": "Todos os campos são obrigatórios",
+	if _, err := models.UserModel.Insert(user); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{
+			"message": "Não foi possível adicionar o registro no banco de dados.",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"message": "Registro cadastrado com sucesso.",
 	})
 }
 
 // UserUpdate update user
 func UserUpdate(c echo.Context) error {
-	// TODO: Fazer validação dos campos
 	id, _ := strconv.Atoi(c.Param("id"))
 	name := c.FormValue("name")
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
-	// TODO: Verificar alguma forma de não ter que sempre passar todos os campos para atualizar
 	var user = models.User{
 		ID:    id,
 		Name:  name,
@@ -94,6 +95,14 @@ func UserUpdate(c echo.Context) error {
 	}
 
 	result := models.UserModel.Find("id=?", id)
+
+	validate := validator.New()
+	if err := validate.Struct(user); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "Por favor, verifique se preencheu todos os campos corretamente",
+			"error": strings.Split(err.Error(),"\n"),
+		})
+	}
 
 	if count, _ := result.Count(); count < 1 {
 		return c.JSON(http.StatusNotFound, map[string]string{
