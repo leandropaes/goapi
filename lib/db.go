@@ -9,7 +9,6 @@ import (
 	"upper.io/db.v3/mysql"
 )
 
-// TODO: Melhorar para utilizar variáveis de ambiente nas configurações
 var configs = mysql.ConnectionURL{
 	Host:     os.Getenv("DB_HOST"),
 	User:     os.Getenv("DB_USER"),
