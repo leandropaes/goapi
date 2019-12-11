@@ -16,6 +16,14 @@ CRUDS:
 ##### Home
 - [GET] /
 
+##### Auth
+- [POST] /auth/login
+
+login: admin@admin.com
+password: admin
+
+| As rotas abaixo precisam de autenticação (JWT), o token é gerado na rota anterior.
+
 ##### Users
 - [GET] /v1/users
 - [GET] /v1/users/:id
