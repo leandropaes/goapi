@@ -2,6 +2,8 @@ package lib
 
 import (
 	"log"
+	"os"
+	_ "github.com/joho/godotenv/autoload"
 
 	"upper.io/db.v3"
 	"upper.io/db.v3/mysql"
@@ -9,10 +11,10 @@ import (
 
 // TODO: Melhorar para utilizar variáveis de ambiente nas configurações
 var configs = mysql.ConnectionURL{
-	Host:     "localhost",
-	User:     "root",
-	Password: "root",
-	Database: "goapi",
+	Host:     os.Getenv("DB_HOST"),
+	User:     os.Getenv("DB_USER"),
+	Password: os.Getenv("DB_PASSWORD"),
+	Database: os.Getenv("DB_DATABASE"),
 }
 
 // Sess que é uma variável que faz a conexão com o banco de dados
