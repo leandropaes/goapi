@@ -1,45 +1,11 @@
 package controllers
 
 import (
-	"github.com/dgrijalva/jwt-go"
-	_ "github.com/joho/godotenv/autoload"
 	"github.com/labstack/echo"
 	"github.com/leandropaes/goapi/app/models"
+	"github.com/leandropaes/goapi/lib"
 	"net/http"
-	"os"
-	"strconv"
-	"time"
 )
-
-type JwtClaims struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	jwt.StandardClaims
-}
-
-func createJwToken(user models.User) (string, error) {
-
-	jwtExpired, _ := strconv.ParseInt(os.Getenv("JWT_EXPIRED_MINUTES"), 10, 64)
-
-	claims := JwtClaims{
-		Name:  user.Name,
-		Email: user.Email,
-		StandardClaims: jwt.StandardClaims{
-			Id:        strconv.Itoa(user.ID),
-			ExpiresAt: time.Now().Add(time.Duration(jwtExpired) * time.Minute).Unix(),
-		},
-	}
-
-	rawToken := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
-
-	token, err := rawToken.SignedString([]byte(os.Getenv("JWT_SECRET")))
-
-	if err != nil {
-		return "", err
-	}
-
-	return token, nil
-}
 
 func AuthLogin(c echo.Context) error {
 	login := c.FormValue("login")
@@ -61,7 +27,7 @@ func AuthLogin(c echo.Context) error {
 		})
 	}
 
-	token, err := createJwToken(user)
+	token, err := lib.CreateJwToken(user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
 			"message": "Erro ao tentar gerar o token",

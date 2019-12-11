@@ -1,6 +1,6 @@
 version: '3'
 services:
-  goapi_mysql:
+  db:
     image: mysql
     container_name: goapi_mysql
     environment:
@@ -18,7 +18,7 @@ services:
     networks:
       - goapi-network
 
-  goapi_app:
+  app:
     build: .
     container_name: goapi_app
     volumes:
@@ -26,9 +26,9 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - goapi_mysql
+      - db
     links:
-      - goapi_mysql
+      - db
     networks:
       - goapi-network
 
