@@ -1,7 +1,9 @@
 package routers
 
 import (
+	_ "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	controllers "github.com/leandropaes/goapi/app/controllers"
 	"net/http"
 )
@@ -19,8 +21,17 @@ func init() {
 		})
 	})
 
+	// Auth
+	App.POST("/auth/login", controllers.AuthLogin)
+
 	// Grupo de rotas
 	api := App.Group("/v1")
+
+	// Middleware JWT para grupo de rota "api"
+	api.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey:     []byte("mySecret"),
+		SigningMethod:  "HS512",
+	}))
 
 	// Users
 	api.GET("/users", controllers.UserIndex)
