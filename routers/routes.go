@@ -1,7 +1,6 @@
 package routers
 
 import (
-	_ "github.com/dgrijalva/jwt-go"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
