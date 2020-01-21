@@ -40,7 +40,7 @@ password: admin
 
 #### BANCO DE DADOS
 
-Para alterar os dados de conexão com o banco de dados altere o arquivo: `lib/db.go`
+Para alterar os dados de conexão com o banco de dados altere o arquivo: `.env`
 
 ##### DUMP - MYSQL
 
